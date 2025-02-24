@@ -1,0 +1,56 @@
+mlflow==2.20.2
+# A platform for managing machine learning experiments, including tracking, reproducibility, and deployment.
+
+tensorflow[and-cuda]==2.18.0
+# An open-source deep learning framework for building and training neural networks, with optional GPU support for accelerated computing.
+
+dvc
+# Data Version Control (DVC) is a version control system for data and models, helping manage machine learning projects with large datasets.
+
+scikit-learn
+# A popular machine learning library for Python, offering simple and efficient tools for data mining and data analysis.
+
+pandas
+# A powerful data manipulation and analysis library, providing data structures like DataFrames to handle structured data.
+
+numpy
+# A fundamental package for scientific computing in Python, offering support for large multi-dimensional arrays and matrices.
+
+notebook
+# A web application for creating and sharing live code, equations, visualizations, and narrative text in a notebook format.
+
+seaborn
+# A Python data visualization library based on matplotlib, providing a high-level interface for drawing attractive and informative statistical graphics.
+
+matplotlib
+# A comprehensive library for creating static, animated, and interactive visualizations in Python.
+
+python-box
+# A library that provides a flexible Python dictionary implementation, allowing for dot notation access to nested data structures.
+
+pyYAML
+# A YAML parser and emitter for Python, making it easy to work with YAML data formats.
+
+tqdm
+# A fast, extensible progress bar for Python, which can be used in loops and functions to visualize progress in tasks.
+
+ensure
+# A library that simplifies enforcing the state of Python classes and functions to ensure they meet certain criteria.
+
+joblib
+# A library for lightweight pipelining in Python, offering tools for easy parallel processing and efficient disk caching.
+
+types-PyYAML
+# Type stubs for the PyYAML library, providing type checking support in tools like mypy.
+
+scipy
+# A scientific computing library that builds on NumPy, providing additional functionality for optimization, integration, interpolation, eigenvalue problems, and other advanced mathematical tasks.
+
+Flask
+# A lightweight WSGI web application framework in Python, ideal for building web applications and APIs.
+
+Flask-Cors
+# An extension for Flask that allows for Cross-Origin Resource Sharing (CORS), enabling web applications to make requests to servers in different domains.
+
+-e .
+# This indicates an editable install of the current package (the one with the setup.py file in the current directory), allowing for modifications to be immediately applied.
