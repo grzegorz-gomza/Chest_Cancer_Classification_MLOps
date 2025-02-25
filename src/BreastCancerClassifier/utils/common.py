@@ -5,6 +5,7 @@ import joblib  # For saving and loading Python objects (typically for machine le
 import base64  # For encoding and decoding binary data to/from Base64 format
 from pathlib import Path  # For object-oriented filesystem paths
 from typing import Any  # For representing any type
+from textwrap import dedent
 
 # Third-party library imports
 import yaml  # For processing YAML files
@@ -36,7 +37,7 @@ def read_yaml(yamlPath: Path) -> ConfigBox:
         with open(yamlPath, "r") as yamlFile:
             content = yaml.safe_load(yamlFile)
             logger.info(f"yaml file: {yamlPath} loaded successfully!")
-            return ConfigBox(content, yamlPath)
+            return ConfigBox(content)
     except BoxValueError:
         raise ValueError("yaml file is empty")
     except Exception as e:
@@ -70,7 +71,7 @@ def load_json(jsonPath: Path) -> ConfigBox:
             content = json.load(f)
 
         logger.info(f"json file loaded from: {jsonPath}")
-        return ConfigBox(content, jsonPath)
+        return ConfigBox(content)
     except BoxValueError:
         raise ValueError("json file is empty")
     except Exception as e:
@@ -140,7 +141,8 @@ def get_size(path: Path) -> str:
         str: The size of the file in KB.
     """
     size_in_kb = round(os.path.getsize(path)/1024)
-    return f"file size: ~ {size_in_kb} KB"
+    return f"file size: ~ {size_in_kb}"
+
 
 def decode_image(imgString: str, fileName: str) -> None:
     """
@@ -170,3 +172,41 @@ def encode_image_into_base64(imagePath: Path) -> str:
     """
     with open(imagePath, "rb") as f:
         return base64.b64encode(f.read())
+
+
+@ensure_annotations
+def start_stage_logger(stage_name: str, length: int = 40, symbol: str = "#") -> str:
+
+    # ANSI escape codes for color
+    GREEN = '\033[92m'  # Green
+    RESET = '\033[0m' 
+    stage_name_start = "".join([stage_name, " started"])
+    
+    stage_start = dedent(f"""\
+        
+        {GREEN}{length * symbol}
+        {stage_name_start.upper().center(length," ")}
+        {length * symbol}{RESET}
+            
+        """)
+    return stage_start
+
+
+@ensure_annotations
+def end_stage_logger(stage_name: str, length: int = 40, symbol: str = "#") -> str:
+
+    # ANSI escape codes for color
+    GREEN = '\033[32m'  # Green
+    RESET = '\033[0m' 
+    
+    stage_name_start = "".join([stage_name, " ended"])
+    
+    stage_end = dedent(f"""\
+
+        
+        {GREEN}{length * symbol}
+        {stage_name_start.upper().center(length," ")}
+        {length * symbol}{RESET}
+            
+        """)
+    return stage_end

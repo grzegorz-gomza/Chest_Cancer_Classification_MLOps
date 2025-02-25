@@ -46,6 +46,12 @@ types-PyYAML
 scipy
 # A scientific computing library that builds on NumPy, providing additional functionality for optimization, integration, interpolation, eigenvalue problems, and other advanced mathematical tasks.
 
+dotenv
+# Library to manage secret keys
+
+kaggle
+# To download data direct from kaggle via API
+
 Flask
 # A lightweight WSGI web application framework in Python, ideal for building web applications and APIs.
 
