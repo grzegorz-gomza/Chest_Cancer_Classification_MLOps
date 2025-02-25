@@ -1,9 +1,14 @@
+# Standard library imports
 import os
 from pathlib import Path
+
+# Third-party library imports
 import dotenv
-dotenv.load_dotenv()
+dotenv.load_dotenv() # has to be executed before kaggle
 
 import kaggle
+
+# Local application/library imports
 from BreastCancerClassifier import logger
 from BreastCancerClassifier.utils.common import get_size
 from BreastCancerClassifier.entity.config_entity import DataIngestionConfig
