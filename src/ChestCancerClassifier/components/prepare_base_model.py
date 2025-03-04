@@ -1,8 +1,4 @@
-import os
-import urllib.request as request
-from zipfile import ZipFile
 import tensorflow as tf
-
 from ChestCancerClassifier.entity.config_entity import PrepareBaseModelConfig
 
 class PrepareBaseModel:
@@ -37,7 +33,7 @@ class PrepareBaseModel:
         self.model.save(self.config.base_model_path)
 
     @staticmethod
-    def _prepare_full_model(model, classes, freeze_all, freeze_till, learning_rate):
+    def _prepare_full_model(model, config, classes, freeze_all, freeze_till, learning_rate):
         """
         Prepares the full model for training by freezing specified layers and 
         adding a dense output layer.
@@ -53,7 +49,21 @@ class PrepareBaseModel:
         Returns:
             tf.keras.Model: The compiled full model ready for training.
         """
+        # Create the data augmentation layers
+        inputs = tf.keras.layers.Input(shape = config.params_image_size, name = "new input layer")
+        
+        # Data augmentation layers
+        augmentation_layers = tf.keras.Sequential([
+            tf.keras.layers.RandomFlip("horizontal"),
+            tf.keras.layers.RandomRotation(0.1),
+            tf.keras.layers.RandomZoom(0.1),
+            tf.keras.layers.RandomContrast(0.1),
+        ], name = "image augmentation")
+        
+        # Apply augmentation only during training
+        augmented = augmentation_layers(inputs, training=True)
 
+        # Freeze the model
         if freeze_all:
             for layer in model.layers:
                 model.trainable = False
@@ -61,19 +71,26 @@ class PrepareBaseModel:
             for layer in model.layers[:-freeze_till]:
                 model.trainable = False
 
-        flatten_in = tf.keras.layers.Flatten()(model.output)
-        prediction = tf.keras.layers.Dense(
-            units = classes,
-            activation = "softmax"
-            )(flatten_in)
+        # Connect the augmentation output to the VGG16 base
+        x = model(augmented, training=False)
+
+        # Add custom layers for fine-tuning
+        x = tf.keras.layers.GlobalAveragePooling2D()(x)
+        x = tf.keras.layers.Dense(512, activation='relu')(x)
+        x = tf.keras.layers.Dropout(0.5)(x)
+        outputs = tf.keras.layers.Dense(
+                    units = classes,
+                    activation = "softmax",
+                    name = "output layer"
+                    )(x)
         
         full_model = tf.keras.models.Model(
-            inputs = model.input,
-            outputs = prediction
+            inputs = inputs,
+            outputs = outputs
             )
 
         full_model.compile(
-            optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate),
+            optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate),
             loss = tf.keras.losses.CategoricalCrossentropy(),
             metrics = ['accuracy']
             )
@@ -85,6 +102,7 @@ class PrepareBaseModel:
     def update_base_model(self):
         self.full_model = self._prepare_full_model(
             model=self.model,
+            config=self.config,
             classes=self.config.params_classes,
             freeze_all=True,
             freeze_till=None,

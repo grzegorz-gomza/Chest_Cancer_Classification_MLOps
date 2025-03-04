@@ -9,10 +9,10 @@ data_ingestion:
 # Stage 02 Base model preparation
 prepare_base_model:
   root_dir: artifacts/prepare_base_model/
-  base_model_path: artifacts/prepare_base_model/base_model.h5
-  updated_base_model_path: artifacts/prepare_base_model/base_model_updated.h5
+  base_model_path: artifacts/prepare_base_model/base_model.keras
+  updated_base_model_path: artifacts/prepare_base_model/base_model_updated.keras
 
 # Stage 03 Train model
 train_model:
   root_dir: artifacts/train_model/
-  model_path: artifacts/train_model/model.h5
+  model_path: artifacts/train_model/model.keras
