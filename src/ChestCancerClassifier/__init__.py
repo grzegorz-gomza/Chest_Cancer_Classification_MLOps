@@ -23,4 +23,4 @@ logging.basicConfig(
     ]
 )
 
-logger = logging.getLogger("BreastCancerClassifierLogger")
+logger = logging.getLogger("ChestCancerClassifierLogger")

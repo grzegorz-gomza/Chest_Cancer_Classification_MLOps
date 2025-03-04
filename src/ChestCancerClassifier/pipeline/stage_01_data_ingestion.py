@@ -2,10 +2,10 @@
 from textwrap import dedent
 
 # Local application/library imports
-from BreastCancerClassifier.config.configuration import ConfigurationManager
-from BreastCancerClassifier.components.data_ingestion import DataIngestion
-from BreastCancerClassifier import logger
-from BreastCancerClassifier.utils.common import start_stage_logger, end_stage_logger
+from ChestCancerClassifier.config.configuration import ConfigurationManager
+from ChestCancerClassifier.components.data_ingestion import DataIngestion
+from ChestCancerClassifier import logger
+from ChestCancerClassifier.utils.common import start_stage_logger, end_stage_logger
 
 
 STAGE_NAME = "Data Ingestion stage"
@@ -21,6 +21,7 @@ class DataIngestionTrainingPipeline:
         # Download the database
         data_ingestion = DataIngestion(config=data_ingestion_config)
         data_ingestion.download_file()
+        data_ingestion.rename_subfolders()
 
 if __name__ == "__main__":
     try:

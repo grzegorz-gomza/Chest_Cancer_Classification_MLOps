@@ -23,3 +23,21 @@ class PrepareBaseModelConfig:
     params_weights: str
     params_learning_rate: float
 
+@dataclass(frozen=True)
+class TrainModelConfig:
+    # Params from config.yaml - Step 3
+    root_dir: Path
+    model_path: Path
+    # Params from config.yaml - Step 2
+    updated_base_model_path: Path
+    # Params from config.yaml - Step 1
+    ingested_data_path: Path
+    # from params.yaml
+    params_augmentation :bool
+    params_image_size: list
+    params_batch_size: int
+    params_include_top: bool
+    params_epochs: int
+    params_classes: int
+    params_weights: str
+    params_learning_rate: float

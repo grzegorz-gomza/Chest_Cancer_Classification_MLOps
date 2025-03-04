@@ -1,9 +1,9 @@
 from abc import ABC
 from pathlib import Path
 
-from BreastCancerClassifier.constants import *
-from BreastCancerClassifier.utils.common import read_yaml, create_directories
-from BreastCancerClassifier.entity.config_entity import *
+from ChestCancerClassifier.constants import *
+from ChestCancerClassifier.utils.common import read_yaml, create_directories
+from ChestCancerClassifier.entity.config_entity import *
 
 
 class ConfigurationManagerTemplate(ABC):
@@ -73,7 +73,7 @@ class ConfigurationManager(ConfigurationManagerTemplate):
 
     def get_prepare_base_model_config(self) -> PrepareBaseModelConfig:
 
-        #Error Handling - Check if 'prepare_base_model' exist before accessing.
+        # Error Handling - Check if 'prepare_base_model' exist before accessing.
         if 'prepare_base_model' not in self.config:
             raise KeyError("'prepare_base_model' key not found in the configuration file.")
 
@@ -101,7 +101,7 @@ class ConfigurationManager(ConfigurationManagerTemplate):
             # from config.yaml
             root_dir = Path(config.root_dir),
             base_model_path = Path(config.base_model_path),
-            updated_base_model_path = Path(config.base_model_path),
+            updated_base_model_path = Path(config.updated_base_model_path),
             # from params.yaml
             params_augmentation  = params.AUGMENTATION,
             params_image_size = params.IMAGE_SIZE,
@@ -115,3 +115,46 @@ class ConfigurationManager(ConfigurationManagerTemplate):
         )
 
         return prepare_base_model_config
+
+    def get_train_model_config(self) -> TrainModelConfig:
+        # Error Handling - check if 'train_model' exist before accessing.
+        if 'train_model' not in self.config:
+            raise KeyError("'train_model' key not found in the configuration file.")
+
+        config = self.config
+        params = self.params
+
+        # Error Handling: Check if necessary keys are present within 'train_model'
+        required_keys = ["root_dir" ,"model_path"]
+        for key in required_keys:
+            if key not in config.train_model:
+                raise KeyError(f"'{key}' key not found in 'train_model' section of the configuration file.")
+
+        # Type validation
+        if not isinstance(config.train_model.root_dir, str):
+             raise TypeError("'root_dir' in 'train_model' must be a string.")
+        if not isinstance(config.train_model.model_path, str):
+             raise TypeError("'model_path' in 'train_model' must be a string.")
+
+        create_directories([config.train_model.root_dir])
+
+        #Adding default parameters.
+        train_model_config = TrainModelConfig(
+            # from config.yaml
+            root_dir = Path(config.train_model.root_dir),
+            model_path = Path(config.train_model.model_path),
+            updated_base_model_path = Path(config.prepare_base_model.updated_base_model_path),
+            ingested_data_path = Path(config.data_ingestion.root_dir),
+            # from params.yaml
+            params_augmentation  = params.AUGMENTATION,
+            params_image_size = params.IMAGE_SIZE,
+            params_batch_size = params.BATCH_SIZE,
+            params_include_top = params.INCLUDE_TOP,
+            params_epochs = params.EPOCHS,
+            params_classes = params.CLASSES,
+            params_weights = params.WEIGHTS,
+            params_learning_rate = params.LEARNING_RATE
+
+        )
+
+        return train_model_config

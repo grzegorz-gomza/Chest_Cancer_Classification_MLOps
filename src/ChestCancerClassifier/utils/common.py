@@ -14,7 +14,7 @@ from box import ConfigBox  # For using Box configurations
 from ensure import ensure_annotations  # For enforcing type annotations at runtime
 
 # Local application/library imports
-from BreastCancerClassifier import logger  # Importing the logger from the BreastCancerClassifier module
+from ChestCancerClassifier import logger  # Importing the logger from the ChestCancerClassifier module
 
 
 @ensure_annotations

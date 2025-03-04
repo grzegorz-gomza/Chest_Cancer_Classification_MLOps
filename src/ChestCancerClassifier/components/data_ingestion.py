@@ -9,13 +9,13 @@ dotenv.load_dotenv() # has to be executed before kaggle
 import kaggle
 
 # Local application/library imports
-from BreastCancerClassifier import logger
-from BreastCancerClassifier.utils.common import get_size
-from BreastCancerClassifier.entity.config_entity import DataIngestionConfig
+from ChestCancerClassifier import logger
+from ChestCancerClassifier.utils.common import get_size
+from ChestCancerClassifier.entity.config_entity import DataIngestionConfig
 
 class DataIngestion:
     """
-    Handles the downloading of datasets for the Breast Cancer Classifier project,
+    Handles the downloading of datasets for the Chest Cancer Classifier project,
     including validations, logging, and data size calculations.
     """
 
@@ -112,3 +112,45 @@ class DataIngestion:
             error_message = f"Dataset download failed. The directory '{self.config.root_dir}' is empty."
             logger.error(error_message)
             raise RuntimeError(error_message)
+
+    def rename_subfolders(self) -> None:
+        """
+        Rename subfolders in all directories based on the names in the first directory.
+        
+        Args:
+            root_dir: The root directory containing folders to process
+        """
+        for root, dirs, _ in os.walk(self.config.root_dir):
+            if any(folder in dirs for folder in ["train", "test", "valid"]):
+                reference_folder_names = None
+                
+                for i, folder in enumerate(dirs):
+                    folder_path = os.path.join(root, folder)
+                    
+                    # Get subfolder names from the first directory as reference
+                    if i == 0:
+                        reference_folder_names = os.listdir(folder_path)
+                    # Rename subfolders in subsequent directories
+                    else:
+                        target_subfolder_names = os.listdir(folder_path)
+                        
+                        # Make sure we have the same number of subfolders
+                        if len(reference_folder_names) != len(target_subfolder_names):
+                            logger.info(f"Warning: Number of subfolders doesn't match in {folder_path}")
+                            continue
+                        
+                        # Pair the source names with current names and rename
+                        for ref_name, current_name in zip(reference_folder_names, target_subfolder_names):
+                            current_path = os.path.join(folder_path, current_name)
+                            new_path = os.path.join(folder_path, ref_name)
+                            
+                            # Avoid renaming if the name is already correct
+                            if current_name != ref_name:
+                                try:
+                                    os.rename(current_path, new_path)
+                                    logger.info(f"Renamed: {current_path} -> {new_path}")
+                                except Exception as e:
+                                    logger.info(f"Error renaming {current_path}: {e}")
+                
+                # Once we've processed one set of directories, break to avoid processing nested directories
+                break

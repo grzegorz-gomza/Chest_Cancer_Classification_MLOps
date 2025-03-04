@@ -1,7 +1,7 @@
-from BreastCancerClassifier import logger
-from BreastCancerClassifier.pipeline.stage_01_data_ingestion import DataIngestionTrainingPipeline
-from BreastCancerClassifier.pipeline.stage_02_prepare_base_model import PrepareBaseModelPipeline
-from BreastCancerClassifier.utils.common import start_stage_logger, end_stage_logger
+from ChestCancerClassifier import logger
+from ChestCancerClassifier.pipeline.stage_01_data_ingestion import DataIngestionTrainingPipeline
+from ChestCancerClassifier.pipeline.stage_02_prepare_base_model import PrepareBaseModelPipeline
+from ChestCancerClassifier.utils.common import start_stage_logger, end_stage_logger
 
 STAGE_NAME = "Data Ingestion stage"
 

@@ -2,10 +2,10 @@
 from textwrap import dedent
 
 # Local application/library imports
-from BreastCancerClassifier.config.configuration import ConfigurationManager
-from BreastCancerClassifier.components.prepare_base_model import PrepareBaseModel
-from BreastCancerClassifier import logger
-from BreastCancerClassifier.utils.common import start_stage_logger, end_stage_logger
+from ChestCancerClassifier.config.configuration import ConfigurationManager
+from ChestCancerClassifier.components.prepare_base_model import PrepareBaseModel
+from ChestCancerClassifier import logger
+from ChestCancerClassifier.utils.common import start_stage_logger, end_stage_logger
 
 
 STAGE_NAME = "Prepare Base Model stage"

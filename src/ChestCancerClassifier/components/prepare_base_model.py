@@ -3,7 +3,7 @@ import urllib.request as request
 from zipfile import ZipFile
 import tensorflow as tf
 
-from BreastCancerClassifier.entity.config_entity import PrepareBaseModelConfig
+from ChestCancerClassifier.entity.config_entity import PrepareBaseModelConfig
 
 class PrepareBaseModel:
     def __init__(self,
