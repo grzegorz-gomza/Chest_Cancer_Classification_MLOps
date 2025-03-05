@@ -54,11 +54,12 @@ class PrepareBaseModel:
         
         # Data augmentation layers
         augmentation_layers = tf.keras.Sequential([
-            tf.keras.layers.RandomFlip("horizontal"),
-            tf.keras.layers.RandomRotation(0.1),
-            tf.keras.layers.RandomZoom(0.1),
-            tf.keras.layers.RandomContrast(0.1),
-        ], name = "image augmentation")
+            tf.keras.layers.RandomFlip(config.params_random_flip),
+            tf.keras.layers.RandomRotation(config.params_random_rotation),
+            tf.keras.layers.RandomZoom(config.params_random_zoom),
+            tf.keras.layers.RandomContrast(config.params_random_contrast),
+            tf.keras.layers.RandomBrightness(config.params_random_brightness),
+        ], name = "image_augmentation")
         
         # Apply augmentation only during training
         augmented = augmentation_layers(inputs, training=True)
@@ -72,16 +73,20 @@ class PrepareBaseModel:
                 model.trainable = False
 
         # Connect the augmentation output to the VGG16 base
-        x = model(augmented, training=False)
+        if config.params_augmentation:
+            x = model(augmented, training=False)
 
         # Add custom layers for fine-tuning
-        x = tf.keras.layers.GlobalAveragePooling2D()(x)
+        x = tf.keras.layers.Flatten()(x)
+        x = tf.keras.layers.Dense(1024, activation='relu')(x)
+        x = tf.keras.layers.Dropout(0.5)(x)
         x = tf.keras.layers.Dense(512, activation='relu')(x)
         x = tf.keras.layers.Dropout(0.5)(x)
+        x = tf.keras.layers.Dense(256, activation='relu')(x)
         outputs = tf.keras.layers.Dense(
                     units = classes,
                     activation = "softmax",
-                    name = "output layer"
+                    name = "output_layer"
                     )(x)
         
         full_model = tf.keras.models.Model(

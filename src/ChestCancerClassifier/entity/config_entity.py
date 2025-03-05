@@ -34,6 +34,11 @@ class TrainModelConfig:
     ingested_data_path: Path
     # from params.yaml
     params_augmentation :bool
+    params_random_flip = str
+    params_random_rotation = float
+    params_random_zoom = float
+    params_random_contrast = float
+    params_random_brightness = float
     params_image_size: list
     params_batch_size: int
     params_include_top: bool
@@ -41,3 +46,4 @@ class TrainModelConfig:
     params_classes: int
     params_weights: str
     params_learning_rate: float
+    params_use_pretrained_model: bool

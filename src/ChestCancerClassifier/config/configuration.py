@@ -147,13 +147,19 @@ class ConfigurationManager(ConfigurationManagerTemplate):
             ingested_data_path = Path(config.data_ingestion.root_dir),
             # from params.yaml
             params_augmentation  = params.AUGMENTATION,
+            params_random_flip = params.RANDOM_FLIP,
+            params_random_rotation = params.RANDOM_ROTATION,
+            params_random_zoom = params.RANDOM_ZOOM,
+            params_random_contrast = params.RANDOM_CONTRAST,
+            params_random_brightness = params.RANDOM_BRIGHTNESS,
             params_image_size = params.IMAGE_SIZE,
             params_batch_size = params.BATCH_SIZE,
             params_include_top = params.INCLUDE_TOP,
             params_epochs = params.EPOCHS,
             params_classes = params.CLASSES,
             params_weights = params.WEIGHTS,
-            params_learning_rate = params.LEARNING_RATE
+            params_learning_rate = params.LEARNING_RATE,
+            params_use_pretrained_model = params.USE_PRETRAINED_MODEL
 
         )
 

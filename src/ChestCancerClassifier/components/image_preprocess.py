@@ -18,7 +18,7 @@ class ImagePreprocessDataSplitter:
         self.data_dir = data_dir
         self.config = config
         
-    def create_data_with_split(self):
+    def create_data_with_split(self, categorical: bool = True):
         """
         Creates and preprocesses datasets for training, testing, and validation.
 
@@ -27,6 +27,9 @@ class ImagePreprocessDataSplitter:
         integer labels based on subfolder names. The images and labels are then split into training, testing, and validation 
         datasets.
 
+        Takes:
+        :param categorical: If True, the one-hot encoding of the labels is returned.
+                            If False, the integer labels are returned.
         Returns:
             tuple: A tuple containing the following elements:
                 - X_train: A tf.float32 tensor of training images.
@@ -93,5 +96,11 @@ class ImagePreprocessDataSplitter:
                             elif folder == "valid":
                                 X_val = tf.concat([X_val, tf.expand_dims(image, axis=0)], axis=0)
                                 y_val = tf.concat([y_val, tf.constant([class_labels[class_folder]], dtype=tf.int32)], axis=0)
+
+        if categorical:
+            y_train = tf.keras.utils.to_categorical(y_train, num_classes=self.config.params_classes)
+            y_test = tf.keras.utils.to_categorical(y_test, num_classes=self.config.params_classes)
+            y_val = tf.keras.utils.to_categorical(y_val, num_classes=self.config.params_classes)
+            
         logger.info(f"Image preprocess done")
         return X_train, X_test, X_val, y_train, y_test, y_val, class_labels
