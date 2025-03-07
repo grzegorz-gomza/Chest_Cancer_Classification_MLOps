@@ -1,9 +1,14 @@
 import os
 from pathlib import Path
+import pickle
+
+from tqdm import tqdm
 import tensorflow as tf
+
 from ChestCancerClassifier.entity.config_entity import TrainModelConfig
 from ChestCancerClassifier import logger
-from tqdm import tqdm
+from ChestCancerClassifier.utils.common import save_to_pickle
+
 
 class ImagePreprocessDataSplitter:
     def __init__(self,
@@ -18,7 +23,7 @@ class ImagePreprocessDataSplitter:
         self.data_dir = data_dir
         self.config = config
         
-    def create_data_with_split(self, categorical: bool = True):
+    def create_data_with_split(self):
         """
         Creates and preprocesses datasets for training, testing, and validation.
 
@@ -27,9 +32,6 @@ class ImagePreprocessDataSplitter:
         integer labels based on subfolder names. The images and labels are then split into training, testing, and validation 
         datasets.
 
-        Takes:
-        :param categorical: If True, the one-hot encoding of the labels is returned.
-                            If False, the integer labels are returned.
         Returns:
             tuple: A tuple containing the following elements:
                 - X_train: A tf.float32 tensor of training images.
@@ -41,6 +43,7 @@ class ImagePreprocessDataSplitter:
                 - class_labels: A dictionary mapping class names to integer labels.
         """
         logger.info(f"Start image pre-processing")
+        categorical = self.config.params_use_categorical_encoding
         img_size = self.config.params_image_size
 
         # Initialize tensors
@@ -101,6 +104,22 @@ class ImagePreprocessDataSplitter:
             y_train = tf.keras.utils.to_categorical(y_train, num_classes=self.config.params_classes)
             y_test = tf.keras.utils.to_categorical(y_test, num_classes=self.config.params_classes)
             y_val = tf.keras.utils.to_categorical(y_val, num_classes=self.config.params_classes)
+
+            # save the preprocessed data into pickle file
+            save_path = self.config.root_dir / "preprocessed_data" / "categorical"
+            save_to_pickle((X_train, y_train), save_path, "train_set_cat.pkl")
+            save_to_pickle((X_test, y_test), save_path, "test_set_cat.pkl")
+            save_to_pickle((X_val, y_val), save_path, "valid_set_cat.pkl")
+            save_to_pickle(class_labels, save_path, "class_labels_cat.pkl")
+
+        else:
+            # save the preprocessed data into pickle file
+            save_path = self.config.root_dir / "preprocessed_data" / "numerical"
+            save_to_pickle((X_train, y_train), save_path, "train_set_num.pkl")
+            save_to_pickle((X_test, y_test), save_path, "test_set_num.pkl")
+            save_to_pickle((X_val, y_val), save_path, "valid_set_num.pkl")
+            save_to_pickle(class_labels, save_path, "class_labels_num.pkl")
+
             
         logger.info(f"Image preprocess done")
         return X_train, X_test, X_val, y_train, y_test, y_val, class_labels

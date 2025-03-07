@@ -1,10 +1,14 @@
+import os
 from abc import ABC
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 from ChestCancerClassifier.constants import *
 from ChestCancerClassifier.utils.common import read_yaml, create_directories
 from ChestCancerClassifier.entity.config_entity import *
 
+load_dotenv()
 
 class ConfigurationManagerTemplate(ABC):
     def __init__(
@@ -104,14 +108,21 @@ class ConfigurationManager(ConfigurationManagerTemplate):
             updated_base_model_path = Path(config.updated_base_model_path),
             # from params.yaml
             params_augmentation  = params.AUGMENTATION,
+            params_random_flip = params.RANDOM_FLIP,
+            params_random_rotation = params.RANDOM_ROTATION,
+            params_random_zoom = params.RANDOM_ZOOM,
+            params_random_contrast = params.RANDOM_CONTRAST,
+            params_random_brightness = params.RANDOM_BRIGHTNESS,
             params_image_size = params.IMAGE_SIZE,
             params_batch_size = params.BATCH_SIZE,
             params_include_top = params.INCLUDE_TOP,
             params_epochs = params.EPOCHS,
             params_classes = params.CLASSES,
             params_weights = params.WEIGHTS,
-            params_learning_rate = params.LEARNING_RATE
-
+            params_learning_rate = params.LEARNING_RATE,
+            params_use_tf_dataset = params.USE_TF_DATASET,
+            params_use_categorical_encoding = params.USE_CATEGORICAL_ENCODING,
+            params_use_pretrained_model = params.USE_PRETRAINED_MODEL,
         )
 
         return prepare_base_model_config
@@ -147,11 +158,6 @@ class ConfigurationManager(ConfigurationManagerTemplate):
             ingested_data_path = Path(config.data_ingestion.root_dir),
             # from params.yaml
             params_augmentation  = params.AUGMENTATION,
-            params_random_flip = params.RANDOM_FLIP,
-            params_random_rotation = params.RANDOM_ROTATION,
-            params_random_zoom = params.RANDOM_ZOOM,
-            params_random_contrast = params.RANDOM_CONTRAST,
-            params_random_brightness = params.RANDOM_BRIGHTNESS,
             params_image_size = params.IMAGE_SIZE,
             params_batch_size = params.BATCH_SIZE,
             params_include_top = params.INCLUDE_TOP,
@@ -159,8 +165,32 @@ class ConfigurationManager(ConfigurationManagerTemplate):
             params_classes = params.CLASSES,
             params_weights = params.WEIGHTS,
             params_learning_rate = params.LEARNING_RATE,
-            params_use_pretrained_model = params.USE_PRETRAINED_MODEL
+            params_use_pretrained_model = params.USE_PRETRAINED_MODEL,
+            params_use_pickled_data = params.USE_PICKLED_DATA,
+            params_use_tf_dataset = params.USE_TF_DATASET,
+            params_use_categorical_encoding = params.USE_CATEGORICAL_ENCODING
 
         )
 
         return train_model_config
+
+    def get_evaluation_config(self) -> EvaluationConfig:
+        config = self.config
+        params = self.params
+
+        create_directories([config.evaluate_model.root_dir])
+
+        #Adding default parameters.
+        evaluation_model_config = EvaluationConfig(
+            root_dir = Path(config.evaluate_model.root_dir),
+            model_path = Path(config.train_model.model_path),
+            pickle_data_path = Path(config.train_model.root_dir),
+            mlflow_uri = os.getenv("MLFLOW_TRACKING_URI"),
+            all_params = self.params,
+            params_image_size = params.IMAGE_SIZE,
+            params_batch_size = params.BATCH_SIZE,
+            params_use_tf_dataset = params.USE_TF_DATASET,
+            params_use_categorical_encoding = params.USE_CATEGORICAL_ENCODING,
+        )
+
+        return evaluation_model_config

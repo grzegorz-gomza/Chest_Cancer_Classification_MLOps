@@ -1,0 +1,67 @@
+vars:
+  - config/config.yaml
+
+stages:
+  01_data_ingestion:
+    cmd: python src/ChestCancerClassifier/pipeline/stage_01_data_ingestion.py
+    deps:
+      - src/ChestCancerClassifier/pipeline/stage_01_data_ingestion.py
+      - config/config.yaml
+    outs:
+      - ${data_ingestion.root_dir}
+  
+  02_prepare_base_model:
+    cmd: python src/ChestCancerClassifier/pipeline/stage_02_prepare_base_model.py
+    deps:
+      - src/ChestCancerClassifier/pipeline/stage_02_prepare_base_model.py
+      - params.yaml
+      - config/config.yaml
+    params:
+      - AUGMENTATION
+      - RANDOM_FLIP
+      - RANDOM_ROTATION
+      - RANDOM_ZOOM
+      - RANDOM_CONTRAST
+      - RANDOM_BRIGHTNESS
+      - IMAGE_SIZE
+      - INCLUDE_TOP
+      - CLASSES
+      - WEIGHTS
+      - USE_PRETRAINED_MODEL
+      - USE_CATEGORICAL_ENCODING
+      - USE_TF_DATASET
+      - USE_PICKLED_DATA
+    outs:
+      - ${prepare_base_model.base_model_path}
+      - ${prepare_base_model.updated_base_model_path}
+  
+  03_train_model:
+    cmd: python src/ChestCancerClassifier/pipeline/stage_03_train_model.py
+    deps:
+      - src/ChestCancerClassifier/pipeline/stage_03_train_model.py
+      - ${prepare_base_model.updated_base_model_path}
+      - params.yaml
+      - config/config.yaml
+    params:
+      - IMAGE_SIZE
+      - EPOCHS
+      - BATCH_SIZE
+      - AUGMENTATION
+      - CLASSES
+      - USE_PRETRAINED_MODEL
+      - USE_CATEGORICAL_ENCODING
+      - USE_TF_DATASET
+      - USE_PICKLED_DATA
+    outs:
+      - ${train_model.root_dir}
+  
+  04_evaluate_model:
+    cmd: python src/ChestCancerClassifier/pipeline/stage_04_evaluate_model.py
+    deps:
+      - src/ChestCancerClassifier/pipeline/stage_04_evaluate_model.py
+      - ${train_model.root_dir}
+      - params.yaml
+      - config/config.yaml
+    metrics:
+      - ${evaluate_model.root_dir}/scores.json:
+          cache: false

@@ -1,33 +1,30 @@
-# Standard library imports
-from textwrap import dedent
-
 # Local application/library imports
 from ChestCancerClassifier.config.configuration import ConfigurationManager
-from ChestCancerClassifier.components.prepare_base_model import PrepareBaseModel
+from ChestCancerClassifier.components.evaluate_model import EvaluateModel
 from ChestCancerClassifier import logger
 from ChestCancerClassifier.utils.common import start_stage_logger, end_stage_logger
 
 
-STAGE_NAME = "Prepare Base Model stage"
-class PrepareBaseModelPipeline:
+STAGE_NAME = "Evaluate Model"
+class EvaluateModelPipeline:
     @staticmethod
     def main():
         # Readig YAML Files
         config = ConfigurationManager()
         
         # Create data ingestion configuration
-        base_model_prep_config = config.get_prepare_base_model_config() 
+        evaluate_model_config = config.get_evaluation_config() 
 
         # Download the database
-        base_model_prep = PrepareBaseModel(config=base_model_prep_config)
-        # if not base_model_prep_config.params_use_pretrained_model:
-        base_model_prep.download_base_model()
-        base_model_prep.update_base_model()
+        evaluate_model = EvaluateModel(config=evaluate_model_config)
+        evaluate_model.evaluate()
+        evaluate_model.save_score()
+        evaluate_model.mlflow_tracking()
 
 if __name__ == "__main__":
     try:
         logger.info(start_stage_logger(STAGE_NAME))
-        PrepareBaseModelPipeline.main()
+        EvaluateModelPipeline.main()
         logger.info(end_stage_logger(STAGE_NAME))
     except Exception as e:
         logger.exception(e)

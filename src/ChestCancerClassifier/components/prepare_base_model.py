@@ -94,11 +94,16 @@ class PrepareBaseModel:
             outputs = outputs
             )
 
+        if config.params_use_categorical_encoding:
+            loss_function = tf.keras.losses.CategoricalCrossentropy()
+        else:
+            loss_function = tf.keras.losses.SparseCategoricalCrossentropy()
+            
         full_model.compile(
             optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate),
-            loss = tf.keras.losses.CategoricalCrossentropy(),
+            loss = loss_function,
             metrics = ['accuracy']
-            )
+        )
 
         full_model.summary()
         return full_model

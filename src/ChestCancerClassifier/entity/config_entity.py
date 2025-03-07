@@ -15,6 +15,11 @@ class PrepareBaseModelConfig:
     updated_base_model_path: Path
     # from params.yaml
     params_augmentation :bool
+    params_random_flip : str
+    params_random_rotation : float
+    params_random_zoom : float
+    params_random_contrast : float
+    params_random_brightness : float
     params_image_size: list
     params_batch_size: int
     params_include_top: bool
@@ -22,6 +27,9 @@ class PrepareBaseModelConfig:
     params_classes: int
     params_weights: str
     params_learning_rate: float
+    params_use_tf_dataset: bool
+    params_use_categorical_encoding: bool
+    params_use_pretrained_model: bool
 
 @dataclass(frozen=True)
 class TrainModelConfig:
@@ -34,11 +42,6 @@ class TrainModelConfig:
     ingested_data_path: Path
     # from params.yaml
     params_augmentation :bool
-    params_random_flip = str
-    params_random_rotation = float
-    params_random_zoom = float
-    params_random_contrast = float
-    params_random_brightness = float
     params_image_size: list
     params_batch_size: int
     params_include_top: bool
@@ -47,3 +50,18 @@ class TrainModelConfig:
     params_weights: str
     params_learning_rate: float
     params_use_pretrained_model: bool
+    params_use_pickled_data: bool
+    params_use_tf_dataset: bool
+    params_use_categorical_encoding: bool
+    
+@dataclass(frozen=True)
+class EvaluationConfig:
+    root_dir: Path
+    model_path: Path
+    pickle_data_path: Path
+    mlflow_uri: str
+    all_params: dict
+    params_image_size: list
+    params_batch_size: int
+    params_use_tf_dataset: bool
+    params_use_categorical_encoding: bool

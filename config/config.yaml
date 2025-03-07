@@ -16,3 +16,7 @@ prepare_base_model:
 train_model:
   root_dir: artifacts/train_model/
   model_path: artifacts/train_model/model.keras
+
+# Stage 04 Evaluate model
+evaluate_model:
+  root_dir: artifacts/evaluate_model/

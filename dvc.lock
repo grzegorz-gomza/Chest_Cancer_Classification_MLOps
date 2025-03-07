@@ -1,0 +1,141 @@
+schema: '2.0'
+stages:
+  01_data_ingestion:
+    cmd: python src/ChestCancerClassifier/pipeline/stage_01_data_ingestion.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 630800fc759743c746166d406832d992
+      size: 609
+      isexec: true
+    - path: src/ChestCancerClassifier/pipeline/stage_01_data_ingestion.py
+      hash: md5
+      md5: 08c3fe7fea51ea75d2a05a09adfd8cd3
+      size: 1394
+      isexec: true
+    outs:
+    - path: artifacts/data_ingestion/.kaggle
+      hash: md5
+      md5: b0f3772707dffb916ab080473683823c.dir
+      size: 124956798
+      nfiles: 1000
+  02_prepare_base_model:
+    cmd: python src/ChestCancerClassifier/pipeline/stage_02_prepare_base_model.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 630800fc759743c746166d406832d992
+      size: 609
+      isexec: true
+    - path: params.yaml
+      hash: md5
+      md5: ac68669ab98b5cfdcc85fa7fc5547370
+      size: 453
+      isexec: true
+    - path: src/ChestCancerClassifier/pipeline/stage_02_prepare_base_model.py
+      hash: md5
+      md5: 0acfa90faf64ef3790548fc765b6bc58
+      size: 1193
+      isexec: true
+    params:
+      params.yaml:
+        AUGMENTATION: true
+        CLASSES: 4
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+        INCLUDE_TOP: false
+        RANDOM_BRIGHTNESS: 0.05
+        RANDOM_CONTRAST: 0.05
+        RANDOM_FLIP: horizontal
+        RANDOM_ROTATION: 0.05
+        RANDOM_ZOOM: 0.05
+        USE_CATEGORICAL_ENCODING: true
+        USE_PICKLED_DATA: true
+        USE_PRETRAINED_MODEL: true
+        USE_TF_DATASET: false
+        WEIGHTS: imagenet
+    outs:
+    - path: artifacts/prepare_base_model/base_model.keras
+      hash: md5
+      md5: 79a911cf132274b95b497ab1b8db5d26
+      size: 58931312
+      isexec: true
+    - path: artifacts/prepare_base_model/base_model_updated.keras
+      hash: md5
+      md5: 28f2f8c4323845897227110b8ae2b5ef
+      size: 164370823
+      isexec: true
+  03_train_model:
+    cmd: python src/ChestCancerClassifier/pipeline/stage_03_train_model.py
+    deps:
+    - path: artifacts/prepare_base_model/base_model_updated.keras
+      hash: md5
+      md5: 28f2f8c4323845897227110b8ae2b5ef
+      size: 164370823
+      isexec: true
+    - path: config/config.yaml
+      hash: md5
+      md5: 630800fc759743c746166d406832d992
+      size: 609
+      isexec: true
+    - path: params.yaml
+      hash: md5
+      md5: ac68669ab98b5cfdcc85fa7fc5547370
+      size: 453
+      isexec: true
+    - path: src/ChestCancerClassifier/pipeline/stage_03_train_model.py
+      hash: md5
+      md5: c53aa358fd7b7cdb074a20ef7b25b5f9
+      size: 1011
+      isexec: true
+    params:
+      params.yaml:
+        AUGMENTATION: true
+        BATCH_SIZE: 16
+        CLASSES: 4
+        EPOCHS: 1
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+        USE_CATEGORICAL_ENCODING: true
+        USE_PICKLED_DATA: true
+        USE_PRETRAINED_MODEL: true
+        USE_TF_DATASET: false
+    outs:
+    - path: artifacts/train_model/
+      hash: md5
+      md5: 2b26696bf25bd2e49b2d44e87de6ed47.dir
+      size: 977290143
+      nfiles: 5
+  04_evaluate_model:
+    cmd: python src/ChestCancerClassifier/pipeline/stage_04_evaluate_model.py
+    deps:
+    - path: artifacts/train_model/
+      hash: md5
+      md5: 2b26696bf25bd2e49b2d44e87de6ed47.dir
+      size: 977290143
+      nfiles: 5
+    - path: config/config.yaml
+      hash: md5
+      md5: 630800fc759743c746166d406832d992
+      size: 609
+      isexec: true
+    - path: params.yaml
+      hash: md5
+      md5: ac68669ab98b5cfdcc85fa7fc5547370
+      size: 453
+      isexec: true
+    - path: src/ChestCancerClassifier/pipeline/stage_04_evaluate_model.py
+      hash: md5
+      md5: 5befd34497b47e3bb12db4067e95a414
+      size: 1052
+      isexec: true
+    outs:
+    - path: artifacts/evaluate_model//scores.json
+      hash: md5
+      md5: 103a32611714ed43fa60ed0753244c52
+      size: 69
+      isexec: true

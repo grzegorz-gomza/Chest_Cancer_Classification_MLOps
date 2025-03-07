@@ -4,6 +4,7 @@ import json  # For working with JSON data
 import joblib  # For saving and loading Python objects (typically for machine learning models)
 import base64  # For encoding and decoding binary data to/from Base64 format
 from pathlib import Path  # For object-oriented filesystem paths
+import pickle  # For pickling and unpickling Python objects
 from typing import Any  # For representing any type
 from textwrap import dedent
 
@@ -210,3 +211,35 @@ def end_stage_logger(stage_name: str, length: int = 40, symbol: str = "#") -> st
             
         """)
     return stage_end
+
+def save_to_pickle(obj: object, path: Path, file_name: str) -> None:
+    """
+    Safely saves an object to a pickle file.
+
+    Args:
+        obj (object): The object to save.
+        path (Path): The path to the directory where the pickle file should be saved.
+        file_name (str): The name of the pickle file, without the extension.
+
+    Returns:
+        None
+    """
+    if not os.path.exists(path):
+        os.makedirs(path, exist_ok=True)
+    with open(path / file_name, 'wb') as f:
+        pickle.dump(obj, f)
+
+def load_from_pickle(path: Path, file_name: str) -> object:
+    """
+    Loads an object from a pickle file.
+
+    Args:
+        path (Path): The path to the directory where the pickle file is located.
+        file_name (str): The name of the pickle file, without the extension.
+
+    Returns:
+        object: The loaded object.
+    """
+    with open(path / file_name, 'rb') as f:
+        obj = pickle.load(f)
+    return obj
