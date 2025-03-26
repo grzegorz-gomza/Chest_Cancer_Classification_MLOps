@@ -243,3 +243,25 @@ def load_from_pickle(path: Path, file_name: str) -> object:
     with open(path / file_name, 'rb') as f:
         obj = pickle.load(f)
     return obj
+
+
+
+from pathlib import Path
+
+def basic_secure_filename(filename: str) -> str:
+    # Get just the name part
+    filename = Path(filename).name
+    
+    # Similar sanitization as above
+    safe_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-"
+    filename = ''.join(c for c in filename if c in safe_chars)
+    
+    # Remove leading dots
+    while filename and filename[0] == '.':
+        filename = filename[1:]
+    
+    # Ensure we have a filename
+    if not filename:
+        filename = "unnamed_file"
+    
+    return filename

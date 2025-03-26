@@ -87,7 +87,7 @@ class ImagePreprocessDataSplitter:
                                 else:
                                     resize = True
                                     logger.info(f"Image size has to be adjusted from {image.shape.as_list()} into {img_size}")
-                            image = tf.image.resize(image, img_size[:2])
+                                    image = tf.image.resize(image, img_size[:2])
                             image = tf.cast(image, tf.float32) / 255.0
                             # Spliting the images
                             if folder == "train":
