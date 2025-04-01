@@ -133,7 +133,7 @@ This step is not required in order to deploy the app on AWS.
 
 2. Run the container:
     ```bash
-    docker run -p 5000:5000 chest-cancer-assistant
+    docker run -p 1988:1988 chest-cancer-assistant
     ```
 
 ## AWS Deployment with GitHub Actions
