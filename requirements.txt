@@ -2,7 +2,8 @@ mlflow==2.20.2
 dagshub
 # A platform for managing machine learning experiments, including tracking, reproducibility, and deployment.
 
-tensorflow[and-cuda]==2.18.0
+# tensorflow[and-cuda]==2.18.0 # with GPU
+tensorflow==2.18.0 # with CPU
 # An open-source deep learning framework for building and training neural networks, with optional GPU support for accelerated computing.
 
 dvc
