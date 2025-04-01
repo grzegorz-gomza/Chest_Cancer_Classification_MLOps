@@ -78,11 +78,13 @@ class PrepareBaseModel:
 
         # Add custom layers for fine-tuning
         x = tf.keras.layers.Flatten()(x)
+        x = tf.keras.layers.Dense(2048, activation='relu')(x)
+        x = tf.keras.layers.Dropout(0.5)(x)
         x = tf.keras.layers.Dense(1024, activation='relu')(x)
         x = tf.keras.layers.Dropout(0.5)(x)
         x = tf.keras.layers.Dense(512, activation='relu')(x)
         x = tf.keras.layers.Dropout(0.5)(x)
-        x = tf.keras.layers.Dense(256, activation='relu')(x)
+        x = tf.keras.layers.Dense(258, activation='relu')(x)
         outputs = tf.keras.layers.Dense(
                     units = classes,
                     activation = "softmax",
