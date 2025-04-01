@@ -90,4 +90,4 @@ def index():
 
 if __name__ == '__main__':
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-    app.run(debug=False)
+    app.run(host='0.0.0.0', port=1988, debug=False)
