@@ -1,15 +1,36 @@
 import tensorflow as tf
 import numpy as np
 from PIL import Image
+import requests
+from pathlib import Path
+import tensorflow as tf
+
 
 from ChestCancerClassifier.entity.config_entity import EvaluationConfig
 
 class ModelHandler:
 
-    def __init__(self, config: EvaluationConfig):
-        # Load your TensorFlow model here
-        self.config = config
-        self.model = tf.keras.models.load_model(self.config.model_path)
+    class ModelHandler:
+        def __init__(self, config: EvaluationConfig):
+            # Load your TensorFlow model here
+            self.config = config
+            # If local:
+            # self.model = tf.keras.models.load_model(self.config.updated_base_model_path)
+
+            # When on AWS:
+            model_path = "model.keras"
+            
+            if not Path(model_path).exists():
+                # Download the model file
+                url = "https://cancer-model.s3.eu-north-1.amazonaws.com/model.keras"
+                response = requests.get(url)
+                
+                # Save the downloaded model to a file
+                with open(model_path, "wb") as model_file:
+                    model_file.write(response.content)
+            
+            self.model = tf.keras.models.load_model(model_path)
+
 
     def preprocess_image(self, image):
         """
