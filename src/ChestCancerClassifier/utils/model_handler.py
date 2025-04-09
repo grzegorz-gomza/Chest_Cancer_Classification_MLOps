@@ -12,16 +12,7 @@ class ModelHandler:
     def __init__(self, config: EvaluationConfig):
         # Load your TensorFlow model here
         self.config = config
-        try:
-            self.model = tf.keras.models.load_model(self.config.model_path_deploy)
-        except Exception as e:
-            print(f"Erorr by reading the model file\n")
-            print(f"Current working directory: {os.getcwd()}\n")
-            print(f"Attempting to load model from: {self.config.model_path_deploy}\n")
-            print(f"Does file exist? {os.path.exists(self.config.model_path_deploy)}\n")
-            os.chdir('/app')
-            print(f"Directory changed to /app, current working dir: {os.getcwd()}")
-
+        self.model = tf.keras.models.load_model(self.config.model_path_deploy)
 
     def preprocess_image(self, image):
         """
