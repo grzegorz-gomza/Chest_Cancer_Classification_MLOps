@@ -15,7 +15,7 @@ WORKDIR /app
 COPY . /app
 
 RUN mkdir -p /export/models && \
-    curl -L -o /export/models/file.keras https://github.com/grzegorz-gomza/Chest_Cancer_Classification_MLOps/raw/refs/heads/main/export/model/model.keras?download=
+    curl -L -o /export/models/model.keras https://github.com/grzegorz-gomza/Chest_Cancer_Classification_MLOps/raw/refs/heads/main/export/model/model.keras?download=
 
 COPY requirements.txt .
 RUN python -m pip install --upgrade pip
