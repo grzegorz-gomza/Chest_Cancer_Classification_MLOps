@@ -19,7 +19,7 @@ class EvaluateModelPipeline:
         evaluate_model = EvaluateModel(config=evaluate_model_config)
         evaluate_model.evaluate()
         evaluate_model.save_score()
-        # evaluate_model.mlflow_tracking() # comment out for deployment
+        evaluate_model.mlflow_tracking() # comment out for deployment
 
 if __name__ == "__main__":
     try:

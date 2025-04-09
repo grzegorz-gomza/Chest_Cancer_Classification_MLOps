@@ -60,5 +60,7 @@ Flask
 Flask-Cors
 # An extension for Flask that allows for Cross-Origin Resource Sharing (CORS), enabling web applications to make requests to servers in different domains.
 
+wheel
+
 -e .
 # This indicates an editable install of the current package (the one with the setup.py file in the current directory), allowing for modifications to be immediately applied.

@@ -1,5 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.11-slim-bookworm
+FROM python:3.12-slim-bookworm
 
 # Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -16,6 +16,6 @@ COPY . /app
 
 COPY requirements.txt .
 RUN python -m pip install --upgrade pip
-RUN python -m pip install -r requirements.txt
+RUN python -m pip install -r requirements.txt --no-cache-dir
 
 CMD ["python3", "app.py"]
