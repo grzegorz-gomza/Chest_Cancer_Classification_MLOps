@@ -14,8 +14,8 @@ RUN apt update -y && apt install awscli -y
 WORKDIR /app
 COPY . /app
 
-RUN mkdir -p /export/models && \
-    curl -L -o /export/models/model.keras https://github.com/grzegorz-gomza/Chest_Cancer_Classification_MLOps/raw/refs/heads/main/export/model/model.keras?download=
+RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash 
+RUN apt-get install git-lfs
 
 COPY requirements.txt .
 RUN python -m pip install --upgrade pip
