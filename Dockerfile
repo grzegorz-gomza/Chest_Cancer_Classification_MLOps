@@ -10,12 +10,12 @@ ENV PYTHONUNBUFFERED=1
 # Install aws
 RUN apt update -y && apt install awscli -y
 
+RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+RUN sudo apt-get install git-lfs
+
 # Install pip requirements
 WORKDIR /app
 COPY . /app
-
-RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash 
-RUN apt-get install git-lfs
 
 COPY requirements.txt .
 RUN python -m pip install --upgrade pip
