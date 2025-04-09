@@ -58,6 +58,7 @@ class TrainModelConfig:
 class EvaluationConfig:
     root_dir: Path
     model_path: Path
+    model_path_deploy: Path
     pickle_data_path: Path
     mlflow_uri: str
     all_params: dict

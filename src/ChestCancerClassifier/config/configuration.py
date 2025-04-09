@@ -184,6 +184,7 @@ class ConfigurationManager(ConfigurationManagerTemplate):
         evaluation_model_config = EvaluationConfig(
             root_dir = Path(config.evaluate_model.root_dir),
             model_path = Path(config.train_model.model_path),
+            model_path_deploy = Path(config.evaluate_model.model_path_deploy),
             pickle_data_path = Path(config.train_model.root_dir),
             mlflow_uri = os.getenv("MLFLOW_TRACKING_URI"),
             all_params = self.params,

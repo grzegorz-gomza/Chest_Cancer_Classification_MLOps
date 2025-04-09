@@ -1,7 +1,6 @@
 import tensorflow as tf
 import numpy as np
 from PIL import Image
-import requests
 from pathlib import Path
 import tensorflow as tf
 
@@ -12,23 +11,7 @@ class ModelHandler:
     def __init__(self, config: EvaluationConfig):
         # Load your TensorFlow model here
         self.config = config
-        # If local:
-        # self.model = tf.keras.models.load_model(self.config.updated_base_model_path)
-
-        # When on AWS:
-        model_path = "model.keras"
-        
-        if not Path(model_path).exists():
-            # Download the model file
-            url = "https://cancer-model.s3.eu-north-1.amazonaws.com/model.keras"
-            response = requests.get(url)
-            
-            # Save the downloaded model to a file
-            with open(model_path, "wb") as model_file:
-                model_file.write(response.content)
-        
-        self.model = tf.keras.models.load_model(model_path)
-
+        self.model = tf.keras.models.load_model(self.config.model_path_deploy)
 
     def preprocess_image(self, image):
         """
@@ -47,4 +30,12 @@ class ModelHandler:
         processed_image = self.preprocess_image(image)
         prediction = self.model.predict(processed_image)
         return prediction
+
+    def predict_endpoint(self, image):
+        processed_image = self.preprocess_image(image)
+        payload = processed_image.tobytes()
+        response = self.runtime_client.invoke_endpoint(EndpointName=self.end_point,
+                                                       ContentType='image/jpeg',
+                                                       Body=payload)
+        prediction = np.frombuffer(response['Body'].read(), dtype=np.float32)
 

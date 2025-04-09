@@ -23,7 +23,7 @@ class PrepareBaseModel:
         the specified path in the configuration.
         """
 
-        self.model = tf.keras.applications.vgg16.VGG16(
+        self.model = tf.keras.applications.VGG16(
             input_shape = self.config.params_image_size,
             weights = self.config.params_weights,
             include_top = self.config.params_include_top
@@ -50,7 +50,7 @@ class PrepareBaseModel:
             tf.keras.Model: The compiled full model ready for training.
         """
         # Create the data augmentation layers
-        inputs = tf.keras.layers.Input(shape = config.params_image_size, name = "new input layer")
+        inputs = tf.keras.layers.Input(shape = config.params_image_size, name = "new_input_layer")
         
         # Data augmentation layers
         augmentation_layers = tf.keras.Sequential([
@@ -78,12 +78,20 @@ class PrepareBaseModel:
 
         # Add custom layers for fine-tuning
         x = tf.keras.layers.Flatten()(x)
-        x = tf.keras.layers.Dense(2048, activation='relu')(x)
-        x = tf.keras.layers.Dropout(0.5)(x)
-        x = tf.keras.layers.Dense(1024, activation='relu')(x)
-        x = tf.keras.layers.Dropout(0.5)(x)
         x = tf.keras.layers.Dense(512, activation='relu')(x)
-        x = tf.keras.layers.Dropout(0.5)(x)
+        x = tf.keras.layers.Dropout(0.25)(x)
+        x = tf.keras.layers.Dense(1024, activation='relu')(x)
+        x = tf.keras.layers.Dropout(0.25)(x)
+        x = tf.keras.layers.Dense(1024, activation='relu')(x)
+        x = tf.keras.layers.Dropout(0.25)(x)
+        x = tf.keras.layers.Dense(1024, activation='relu')(x)
+        x = tf.keras.layers.Dropout(0.25)(x)
+        x = tf.keras.layers.Dense(1024, activation='relu')(x)
+        x = tf.keras.layers.Dropout(0.25)(x)
+        x = tf.keras.layers.Dense(1024, activation='relu')(x)
+        x = tf.keras.layers.Dropout(0.25)(x)
+        x = tf.keras.layers.Dense(512, activation='relu')(x)
+        x = tf.keras.layers.Dropout(0.25)(x)
         x = tf.keras.layers.Dense(258, activation='relu')(x)
         outputs = tf.keras.layers.Dense(
                     units = classes,
@@ -104,7 +112,7 @@ class PrepareBaseModel:
         full_model.compile(
             optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate),
             loss = loss_function,
-            metrics = ['accuracy']
+            metrics = ['accuracy', 'auc']
         )
 
         full_model.summary()
@@ -116,7 +124,7 @@ class PrepareBaseModel:
             model=self.model,
             config=self.config,
             classes=self.config.params_classes,
-            freeze_all=True,
+            freeze_all=False,
             freeze_till=None,
             learning_rate=self.config.params_learning_rate
         )

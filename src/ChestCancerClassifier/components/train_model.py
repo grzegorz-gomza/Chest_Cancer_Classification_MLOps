@@ -110,7 +110,38 @@ class TrainModel:
             self.steps_per_epoch = None
             self.validation_steps = None
 
+            EARLY_STOPPING = tf.keras.callbacks.EarlyStopping(
+            monitor="val_loss", mode="min", restore_best_weights=True,
+            # start_from_epoch = 5,
+            patience = 100
+        )
 
+        def scheduler(epoch, lr):          
+            if epoch < 50:
+                return 0.001
+            elif epoch < 150:
+                return 0.0001
+            elif epoch < 250:
+                return 0.00001
+            elif epoch < 350:
+                return 0.000001
+            elif epoch < 450:
+                return 0.0000001
+            elif epoch < 550:
+                return 0.00000001
+            elif epoch < 650:
+                return 0.000000001
+            elif epoch < 750:
+                return 0.0000000001 
+            else:
+                return 0.00000000001
+
+     
+
+        # Create a learning rate scheduler
+        lr_scheduler = tf.keras.callbacks.LearningRateScheduler(scheduler)
+
+        # Compile the model
         # Train the model
         self.model.fit(x = X_train if not self.use_dataset else train_dataset,
                        y = y_train if not self.use_dataset else None,
@@ -120,7 +151,12 @@ class TrainModel:
                        validation_data = (X_val, y_val) if not self.use_dataset else val_dataset,
                        shuffle = True,
                        steps_per_epoch = self.steps_per_epoch,
-                       validation_steps = self.validation_steps)
+                       validation_steps = self.validation_steps,
+                    #    callbacks = [
+                    #     #    EARLY_STOPPING,
+                    #     #    lr_scheduler
+                    #     ]
+                       )
 
         # Save the model
         self.model.save(self.config.model_path)
