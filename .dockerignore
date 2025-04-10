@@ -23,4 +23,12 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+**/_example
+**/.artifacts
+**/log_msgs
+**/tests
+**/*.keras
+**/*.h5
+**/*.ipynb
+!/export/model/model.keras
 LICENSE

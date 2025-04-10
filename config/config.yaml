@@ -20,4 +20,4 @@ train_model:
 # Stage 04 Evaluate model
 evaluate_model:
   root_dir: artifacts/evaluate_model/
-  model_path_deploy : /export/model/model.keras
+  model_path_deploy : export/model/model.keras

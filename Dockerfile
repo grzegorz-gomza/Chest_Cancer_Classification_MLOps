@@ -8,7 +8,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Install aws
-RUN apt update -y && apt install awscli -y
+# RUN apt update -y &&
+RUN apt install awscli -y
 
 # Install pip requirements
 WORKDIR /app
